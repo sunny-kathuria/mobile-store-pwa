@@ -3,7 +3,7 @@
     <!-- App Header -->
     <header class="app-header" v-if="showHeader">
       <div class="header-content">
-        <span class="app-title">📱 Mobile Store</span>
+        <span class="app-title">📱 OldPhone</span>
         <button
           class="settings-btn"
           @click="goToSettings"

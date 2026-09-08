@@ -1,6 +1,6 @@
 {
-  "name": "Mobile Store",
-  "short_name": "MobStore",
+  "name": "OldPhone",
+  "short_name": "OldPhone",
   "description": "Second-hand phone purchase recording app",
   "start_url": "/mobile-store-pwa/",
   "scope": "/mobile-store-pwa/",

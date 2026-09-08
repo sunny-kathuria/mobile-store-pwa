@@ -2,7 +2,7 @@
   <div class="pin-page">
     <div class="pin-card">
       <div class="pin-icon">🔒</div>
-      <h1 class="pin-title">Mobile Store</h1>
+      <h1 class="pin-title">OldPhone</h1>
       <p class="pin-subtitle">Enter your 4-digit PIN to continue</p>
 
       <!-- PIN dots display -->
