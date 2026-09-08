@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#1a56db" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Mobile Store" />
+    <link rel="manifest" href="/mobile-store-pwa/manifest.json" />
+    <link rel="icon" type="image/png" href="/mobile-store-pwa/icons/icon-192.png" />
+    <title>Mobile Store</title>
+
+    <!-- Google Identity Services for Drive OAuth -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #f3f4f6;
+        min-height: 100vh;
+      }
+      #app { min-height: 100vh; }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
+    <script>
+      // Register service worker
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker
+            .register('/mobile-store-pwa/sw.js', { scope: '/mobile-store-pwa/' })
+            .then(() => console.log('SW registered'))
+            .catch((err) => console.error('SW registration failed:', err));
+        });
+      }
+    </script>
+  </body>
+</html>

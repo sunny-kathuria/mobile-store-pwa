@@ -1,0 +1,4 @@
+# Copy this file to .dev.vars for local Wrangler development
+# NEVER commit .dev.vars to git
+
+FAST2SMS_API_KEY=your_fast2sms_api_key_here
