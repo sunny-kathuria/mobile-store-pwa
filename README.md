@@ -61,9 +61,11 @@ Go to: GitHub repo → Settings → Secrets and variables → Actions → New re
 ### Step 3 — Google OAuth Authorized Origin
 
 1. Go to [Google Cloud Console](https://console.cloud.google.com)
-2. APIs & Services → Credentials → OAuth 2.0 Client ID
-3. Add `https://sunny-kathuria.github.io` to **Authorized JavaScript origins**
-4. Save
+2. Open **APIs & Services → Credentials** and select the OAuth client used by `VITE_GOOGLE_CLIENT_ID`
+3. Make sure its application type is **Web application**
+4. Add `https://sunny-kathuria.github.io` to **Authorized JavaScript origins**
+5. Do not add `/mobile-store-pwa` to the origin; paths are not valid here
+6. Save, then reload the app and connect Google Drive again
 
 ### Step 4 — Enable GitHub Pages
 

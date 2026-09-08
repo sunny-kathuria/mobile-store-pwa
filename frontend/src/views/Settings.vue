@@ -139,7 +139,7 @@ async function connectDrive() {
     await signIn()
     await runSync()
   } catch (err) {
-    connectError.value = 'Could not connect to Google Drive.'
+    connectError.value = err.message || 'Could not connect to Google Drive.'
     console.error(err)
   } finally {
     connecting.value = false

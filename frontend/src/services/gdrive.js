@@ -41,11 +41,25 @@ function getTokenClient() {
 export function signIn() {
   return new Promise((resolve, reject) => {
     const driveStore = useDriveStore()
-    const client = getTokenClient()
+    let client
+    try {
+      client = getTokenClient()
+    } catch (error) {
+      reject(new Error('Google Drive is not configured. Check VITE_GOOGLE_CLIENT_ID.'))
+      console.error(error)
+      return
+    }
 
     client.callback = (response) => {
       if (response.error) {
-        reject(new Error(response.error))
+        if (response.error === 'origin_mismatch') {
+          reject(new Error(
+            'Google OAuth origin is not registered. Add https://sunny-kathuria.github.io '
+            + 'to the Authorized JavaScript origins for this OAuth client.'
+          ))
+        } else {
+          reject(new Error(`Google OAuth failed: ${response.error}`))
+        }
         return
       }
       // Decode the JWT id_token is not available in token flow, fetch user info

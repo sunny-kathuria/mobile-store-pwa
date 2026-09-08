@@ -77,7 +77,7 @@ async function connectDrive() {
     await signIn()
     await syncPending()
   } catch (err) {
-    driveError.value = 'Could not connect to Google Drive. Please try again.'
+    driveError.value = err.message || 'Could not connect to Google Drive. Please try again.'
     console.error(err)
   } finally {
     connecting.value = false
