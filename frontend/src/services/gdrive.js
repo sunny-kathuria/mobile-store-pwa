@@ -216,7 +216,6 @@ export async function syncTransaction(record) {
   )
 
   // Build JSON metadata — exclude blob fields, include Drive file IDs
-  const dateStr = new Date(record.createdAt).toISOString().slice(0, 10)
   const jsonMeta = {
     id: record.id,
     createdAt: record.createdAt,
@@ -238,7 +237,8 @@ export async function syncTransaction(record) {
   const jsonBlob = new Blob([JSON.stringify(jsonMeta, null, 2)], {
     type: 'application/json',
   })
-  await uploadFile(jsonBlob, `${dateStr}_${record.id}.json`, 'application/json', txFolderRoot)
+  const sessionFilename = `${filePrefix}_${storageName(record.imei)}.json`
+  await uploadFile(jsonBlob, sessionFilename, 'application/json', txFolderRoot)
 
   // Mark as synced in IndexedDB
   await markSynced(record.id)
