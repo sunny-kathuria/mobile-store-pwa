@@ -130,11 +130,9 @@ function dateInputValue(date) {
 
 // Use local calendar dates so the picker does not shift by one day in some timezones.
 const today = new Date()
-const maxDobDate = new Date(today)
-maxDobDate.setFullYear(today.getFullYear() - 18)
 const minDobDate = new Date(today)
 minDobDate.setFullYear(today.getFullYear() - 120)
-const maxDob = dateInputValue(maxDobDate)
+const maxDob = '2018-12-31'
 const minDob = dateInputValue(minDobDate)
 
 function validate() {
@@ -144,7 +142,7 @@ function validate() {
     errors.dob = 'Date of birth is required.'
     valid = false
   } else if (form.dob < minDob || form.dob > maxDob) {
-    errors.dob = 'Seller must be between 18 and 120 years old.'
+    errors.dob = 'Enter a date between the allowed DOB range and 31 Dec 2018.'
     valid = false
   }
   if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
