@@ -21,6 +21,7 @@
         <input
           v-model="form.dob"
           type="date"
+          :min="minDob"
           :max="maxDob"
           :class="{ error: errors.dob }"
           @change="errors.dob = ''"
@@ -120,15 +121,32 @@ const form = reactive({
 
 const errors = reactive({})
 
-// Max DOB: must be at least 18 years old
-const maxDob = new Date(Date.now() - 18 * 365.25 * 24 * 3600 * 1000)
-  .toISOString()
-  .slice(0, 10)
+function dateInputValue(date) {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+// Use local calendar dates so the picker does not shift by one day in some timezones.
+const today = new Date()
+const maxDobDate = new Date(today)
+maxDobDate.setFullYear(today.getFullYear() - 18)
+const minDobDate = new Date(today)
+minDobDate.setFullYear(today.getFullYear() - 120)
+const maxDob = dateInputValue(maxDobDate)
+const minDob = dateInputValue(minDobDate)
 
 function validate() {
   let valid = true
   if (!form.fullName.trim()) { errors.fullName = 'Full name is required.'; valid = false }
-  if (!form.dob) { errors.dob = 'Date of birth is required.'; valid = false }
+  if (!form.dob) {
+    errors.dob = 'Date of birth is required.'
+    valid = false
+  } else if (form.dob < minDob || form.dob > maxDob) {
+    errors.dob = 'Seller must be between 18 and 120 years old.'
+    valid = false
+  }
   if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
     errors.email = 'Enter a valid email address.'; valid = false
   }
