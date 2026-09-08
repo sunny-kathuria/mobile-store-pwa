@@ -67,7 +67,23 @@ Go to: GitHub repo → Settings → Secrets and variables → Actions → New re
 5. Do not add `/mobile-store-pwa` to the origin; paths are not valid here
 6. Save, then reload the app and connect Google Drive again
 
-### Step 4 — Enable GitHub Pages
+### Step 4 — Google OAuth Consent Screen
+
+If Google says the app has not completed verification, the OAuth consent screen
+is still in testing. For private testing:
+
+1. In Google Cloud Console, open **Google Auth Platform → Audience**
+  (or **APIs & Services → OAuth consent screen** in the older interface)
+2. Set the app's publishing status to **Testing**
+3. Under **Test users**, add the exact Google account that will connect Drive
+4. Save, then sign in again with that test account
+
+Only test users can authorize an app while it is in testing. For a public app,
+publish the consent screen and complete Google's verification process if Google
+requires it. The app requests the `drive.file` scope, which limits access to
+files created by this app.
+
+### Step 5 — Enable GitHub Pages
 
 1. Push code to the `main` branch
 2. Wait for the GitHub Actions workflow to complete (check Actions tab)
