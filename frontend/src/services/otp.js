@@ -7,6 +7,13 @@
 import axios from 'axios'
 
 const WORKER_URL = import.meta.env.VITE_WORKER_URL
+const TEST_OTP = import.meta.env.VITE_TEST_OTP?.trim()
+
+if (TEST_OTP && !/^\d{6}$/.test(TEST_OTP)) {
+  console.error('VITE_TEST_OTP must be exactly 6 digits. Ignoring test OTP.')
+}
+
+const TEST_MODE = /^\d{6}$/.test(TEST_OTP || '')
 
 if (!WORKER_URL) {
   console.error('VITE_WORKER_URL is not set. OTP sending will not work.')
@@ -18,6 +25,10 @@ if (!WORKER_URL) {
  * @returns {Promise<{ success: boolean }>}
  */
 export async function sendOtp(mobile) {
+  if (TEST_MODE) {
+    return { success: true }
+  }
+
   const res = await axios.post(`${WORKER_URL}/send`, { mobile })
   return res.data
 }
@@ -29,6 +40,15 @@ export async function sendOtp(mobile) {
  * @returns {Promise<{ verified: boolean, sessionToken: string }>}
  */
 export async function verifyOtp(mobile, otp) {
+  if (TEST_MODE) {
+    if (otp !== TEST_OTP) {
+      const error = new Error('Incorrect test OTP')
+      error.response = { data: { error: 'Incorrect OTP' } }
+      throw error
+    }
+    return { verified: true, sessionToken: 'test-session' }
+  }
+
   const res = await axios.post(`${WORKER_URL}/verify`, { mobile, otp })
   return res.data
 }

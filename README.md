@@ -100,6 +100,9 @@ npx wrangler dev
 ```
 
 Set `VITE_WORKER_URL=http://localhost:8787` in `frontend/.env.local` for local testing.
+To test the wizard without sending SMS, add `VITE_TEST_OTP=123456` to
+`frontend/.env.local`. In this mode, sending is simulated and `123456` is the
+only accepted OTP. Remove the variable before building a production release.
 
 ---
 
