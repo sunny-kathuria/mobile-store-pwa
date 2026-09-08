@@ -39,6 +39,7 @@ jobs:
         env:
           VITE_WORKER_URL: ${{ secrets.VITE_WORKER_URL }}
           VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
+          VITE_TEST_OTP: 123456
         run: npm run build
 
       - name: Upload Pages artifact
