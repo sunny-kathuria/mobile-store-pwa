@@ -81,7 +81,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useTransactionStore } from '../store/transaction.js'
 import { saveTransaction } from '../services/db.js'
-import { syncTransaction, isConnected } from '../services/gdrive.js'
+import { ensureConnected, syncTransaction } from '../services/gdrive.js'
 
 const router = useRouter()
 const txStore = useTransactionStore()
@@ -200,8 +200,8 @@ async function submit() {
     // Save locally first (always succeeds offline)
     const id = await saveTransaction(record)
 
-    // Try Drive sync immediately if connected
-    if (isConnected()) {
+    // Reconnect silently when already authorized, then sync automatically.
+    if (await ensureConnected()) {
       try {
         const fullRecord = { ...record, id }
         await syncTransaction(fullRecord)

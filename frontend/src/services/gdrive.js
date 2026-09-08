@@ -38,7 +38,7 @@ function getTokenClient() {
  * Sign in and get an access token.
  * Returns a Promise that resolves when the user has granted access.
  */
-export function signIn() {
+function requestAccessToken(prompt) {
   return new Promise((resolve, reject) => {
     const driveStore = useDriveStore()
     let client
@@ -69,8 +69,29 @@ export function signIn() {
       })
     }
 
-    client.requestAccessToken({ prompt: 'consent' })
+    client.requestAccessToken({ prompt })
   })
+}
+
+export function signIn() {
+  return requestAccessToken('consent')
+}
+
+/**
+ * Restore an existing Google authorization without showing the consent screen.
+ * Returns false when the user has not authorized Drive yet.
+ */
+export async function ensureConnected() {
+  const driveStore = useDriveStore()
+  if (driveStore.isTokenValid()) return true
+
+  try {
+    await requestAccessToken('none')
+    return driveStore.isTokenValid()
+  } catch (error) {
+    console.warn('Silent Google Drive reconnect unavailable:', error.message)
+    return false
+  }
 }
 
 async function fetchUserEmail(accessToken) {
