@@ -36,6 +36,18 @@
       >
         {{ loading ? 'Verifying…' : 'Verify & Continue' }}
       </button>
+
+      <div v-if="resendError" class="alert alert-error" style="margin-top: 10px;">
+        {{ resendError }}
+      </div>
+
+      <button
+        class="btn btn-outline resend-button"
+        :disabled="resendLoading || loading"
+        @click="resendHandler"
+      >
+        {{ resendLoading ? 'Resending…' : 'Resend OTP' }}
+      </button>
     </div>
 
     <button class="back-link" @click="goBack">← Change mobile number</button>
@@ -45,7 +57,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { verifyOtp } from '../services/otp.js'
+import { sendOtp, verifyOtp } from '../services/otp.js'
 import { useTransactionStore } from '../store/transaction.js'
 
 const router = useRouter()
@@ -55,6 +67,8 @@ const digits = ref(Array(6).fill(''))
 const inputs = ref([])
 const loading = ref(false)
 const verifyError = ref('')
+const resendLoading = ref(false)
+const resendError = ref('')
 
 const otp = computed(() => digits.value.join(''))
 
@@ -98,6 +112,21 @@ async function verifyHandler() {
   }
 }
 
+async function resendHandler() {
+  resendLoading.value = true
+  resendError.value = ''
+  verifyError.value = ''
+  try {
+    await sendOtp(txStore.mobile)
+    digits.value = Array(6).fill('')
+    inputs.value[0]?.focus()
+  } catch (err) {
+    resendError.value = err.response?.data?.error || 'Failed to resend OTP. Please try again.'
+  } finally {
+    resendLoading.value = false
+  }
+}
+
 function goBack() {
   txStore.setStep(1)
   router.push('/step1')
@@ -135,6 +164,10 @@ function goBack() {
 
 .otp-box.error {
   border-color: var(--danger);
+}
+
+.resend-button {
+  margin-top: 10px;
 }
 
 .back-link {

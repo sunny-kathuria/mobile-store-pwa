@@ -23,25 +23,12 @@
       </div>
 
       <div v-if="apiError" class="alert alert-error">{{ apiError }}</div>
-      <div v-if="sent" class="alert alert-info">
-        ✓ OTP sent to +91 {{ mobile }}. Ask the customer to show you the SMS.
-      </div>
-
       <button
         class="btn btn-primary"
         :disabled="loading || mobile.length !== 10"
         @click="sendOtpHandler"
       >
-        {{ loading ? 'Sending…' : sent ? 'Resend OTP' : 'Send OTP' }}
-      </button>
-
-      <button
-        v-if="sent"
-        class="btn btn-outline"
-        style="margin-top: 10px;"
-        @click="proceed"
-      >
-        Enter OTP →
+        {{ loading ? 'Sending…' : 'Send OTP' }}
       </button>
     </div>
 
@@ -63,7 +50,6 @@ const txStore = useTransactionStore()
 
 const mobile = ref(txStore.mobile || '')
 const loading = ref(false)
-const sent = ref(false)
 const mobileError = ref('')
 const apiError = ref('')
 
@@ -80,7 +66,8 @@ async function sendOtpHandler() {
   try {
     await sendOtp(mobile.value)
     txStore.mobile = mobile.value
-    sent.value = true
+    txStore.setStep(2)
+    router.push('/step2')
   } catch (err) {
     const msg = err.response?.data?.error || 'Failed to send OTP. Please try again.'
     apiError.value = msg
@@ -89,10 +76,6 @@ async function sendOtpHandler() {
   }
 }
 
-function proceed() {
-  txStore.setStep(2)
-  router.push('/step2')
-}
 </script>
 
 <style scoped>
