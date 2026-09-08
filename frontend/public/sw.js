@@ -4,7 +4,7 @@
  * Scope: /mobile-store-pwa/
  */
 
-const CACHE_NAME = 'mobile-store-v1';
+const CACHE_NAME = 'mobile-store-v2';
 
 // App shell assets to pre-cache on install
 const PRECACHE_URLS = [
