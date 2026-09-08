@@ -166,6 +166,14 @@ async function uploadFile(blob, filename, mimeType, folderId) {
   return data.id
 }
 
+function storageName(value) {
+  return String(value || 'unknown')
+    .trim()
+    .replace(/[^a-zA-Z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '')
+    .toLowerCase() || 'unknown'
+}
+
 // ─── Sync ─────────────────────────────────────────────────────────────────────
 
 /**
@@ -174,6 +182,7 @@ async function uploadFile(blob, filename, mimeType, folderId) {
  */
 export async function syncTransaction(record) {
   const driveStore = useDriveStore()
+  const filePrefix = `${storageName(record.mobile)}_${storageName(record.fullName)}`
 
   // Ensure token is still valid
   if (!driveStore.isTokenValid()) {
@@ -189,19 +198,19 @@ export async function syncTransaction(record) {
   // Upload the three images
   const frontId = await uploadFile(
     record.aadhaarFrontBlob,
-    'aadhaar_front.jpg',
+    `${filePrefix}_aadhar_front.jpg`,
     'image/jpeg',
     txFolderId
   )
   const backId = await uploadFile(
     record.aadhaarBackBlob,
-    'aadhaar_back.jpg',
+    `${filePrefix}_aadhar_back.jpg`,
     'image/jpeg',
     txFolderId
   )
   const selfieId = await uploadFile(
     record.selfieBlob,
-    'selfie.jpg',
+    `${filePrefix}_selfie.jpg`,
     'image/jpeg',
     txFolderId
   )
